@@ -1,3 +1,5 @@
+import java.text.Normalizer;
+import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,8 +15,16 @@ public class Pet {
     private String numeroEndereco;
     private String cidadeEndereco;
     private static final String NIF = "NÃO INFORMADO";
+    private LocalDate registerDate;
+
+    public static final String BOLD = "\033[1m";
+    public static final String RESET = "\033[0m";
 
     Scanner scanner = new Scanner(System.in);
+
+    public Pet() {
+        this.registerDate = LocalDate.now();
+    }
 
     public enum SexoPet {
         MACHO,
@@ -69,7 +79,7 @@ public class Pet {
         System.out.println("6 - Peso do Pet");
         weightValidation();
 
-        System.out.println("7 - Raça do Pet");
+        System.out.println("7 - Raça do Pet\n");
         this.raca = scanner.nextLine();
         breedValidation();
     }
@@ -121,6 +131,58 @@ public class Pet {
             throw new Exception("Raça do Pet deve conter APENAS letras de A-Z"); // Se não bater com o padrão, lança-se uma EXCEPTION
         }
 
+    }
+
+    public void displayPet() {
+        System.out.println(
+                nomePet + " - " +
+                        tipo + " - " +
+                        sexo + " - " +
+                        ruaEndereco + ", " +
+                        numeroEndereco + " - " +
+                        cidadeEndereco + " - " +
+                        idade + " anos - " +
+                        peso + "kg - " +
+                        raca
+        );
+    }
+
+    public void displayPet(int criterion, String findSearch){
+        String name = nomePet;
+        String sex = sexo.toString();
+        String age = idade + " anos";
+        String weight = peso + "kg";
+        String breed = raca;
+        String address = ruaEndereco + ", " + numeroEndereco + " - " + cidadeEndereco;
+        String date = registerDate.getMonthValue() + "/" + registerDate.getYear();
+
+        switch (criterion){
+            case 1:
+                name = highlight(nomePet, findSearch);
+                break;
+            case 5:
+                breed = highlight(raca, findSearch);
+                break;
+            case 6:
+                address = highlight(address, findSearch);
+                break;
+
+        }
+        System.out.println(
+                name + " - " +
+                        tipo + " - " +
+                        sex + " - " +
+                        address + " - " +
+                        age + " anos - " +
+                        weight + "kg - " +
+                        breed + " - " +
+                        date
+        );
+
+    }
+
+    public static String highlight(String text, String search){
+        return text.replaceAll("(?i)" + Pattern.quote(search), BOLD + "$0" + RESET);
     }
 
 
@@ -196,4 +258,11 @@ public class Pet {
         this.cidadeEndereco = cidadeEndereco;
     }
 
+    public LocalDate getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(LocalDate registerDate) {
+        this.registerDate = registerDate;
+    }
 }
