@@ -13,7 +13,7 @@ public class FilterPets {
         }
     }
 
-    public static boolean verifySecondCriterion(Pet pet, int criterion, String value) {
+    public static boolean verifyCriterion(Pet pet, int criterion, String value) {
 
         switch (criterion) {
             case 1:
@@ -28,31 +28,44 @@ public class FilterPets {
                 }
 
             case 3:
-                double age = Double.parseDouble(value);
-                return pet.getIdade() == age;
+                try {
+                    double age = Double.parseDouble(value);
+                    return pet.getIdade() == age;
+                } catch (NumberFormatException e) {
+                    return false;
+                }
 
             case 4:
-                double weight = Double.parseDouble(value);
-                return pet.getPeso() == weight;
+                try {
+                    double weight = Double.parseDouble(value);
+                    return pet.getPeso() == weight;
+                } catch (NumberFormatException e) {
+                    return false;
+                }
 
             case 5:
                 return normalizeText(pet.getRaca()).contains(normalizeText(value));
 
             case 6:
-                String addres = normalizeText(
+                String address = normalizeText(
                         pet.getRuaEndereco() + " " +
                                 pet.getNumeroEndereco() + " " +
                                 pet.getCidadeEndereco()
                 );
-                return addres.contains(normalizeText(value));
+                return address.contains(normalizeText(value));
             case 7:
-                String[] parts = value.split("/");
+                try {
+                    String[] parts = value.split("/");
+                    int month = Integer.parseInt(parts[0]);
+                    int year = Integer.parseInt(parts[1]);
+                    LocalDate date = pet.getRegisterDate();
 
-                int month = Integer.parseInt(parts[0]);
-                int year = Integer.parseInt(parts[1]);
-                LocalDate date = pet.getRegisterDate();
+                    return date.getMonthValue() == month && date.getYear() == year;
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                    return false;
+                }
 
-                return date.getMonthValue() == month && date.getYear() == year;
+
             default:
                 return false;
 
@@ -60,17 +73,35 @@ public class FilterPets {
         }
     }
 
-//    public void callSecondCriterionOrNot(Pet pet, int secondOption, boolean foundPet, int useSecond, String secondValue){
-//        if (secondOption == 0) { // Se Segundo Criterio não existe, mostre o Pet com 1 criterio
-//            pet.displayPet();
-//            foundPet = true;
-//        } else {
-//            if (verifySecondCriterion(pet, useSecond, secondValue)) {
-//                pet.displayPet();
-//                foundPet = true;
-//            }
-//        }
-//    }
+    public static String readCriterionValue(int criterion, Scanner scanner) {
+        switch (criterion) {
+            case 1:
+                System.out.println("Digite o nome:");
+                return scanner.nextLine();
+            case 2:
+                System.out.println("Digite o sexo:");
+                return scanner.nextLine();
+            case 3:
+                System.out.println("Digite a idade:");
+                return scanner.nextLine();
+            case 4:
+                System.out.println("Digite o peso:");
+                return scanner.nextLine();
+            case 5:
+                System.out.println("Digite a raça:");
+                return scanner.nextLine();
+            case 6:
+                System.out.println("Digite o endereço:");
+                return scanner.nextLine();
+            case 7:
+                System.out.println("Digite a data (Mẽs):");
+                String month = scanner.nextLine();
+                System.out.println("Digite a data (Ano):");
+                String year = scanner.nextLine();
+                return month + "/" + year;
+        }
+        return "erro";
+    }
 
 
     public static void findPet(Pet[] pets, int qntPets) {
@@ -111,21 +142,20 @@ public class FilterPets {
         int firstOption = scanner.nextInt();
         scanner.nextLine();
 
-        // Segundo Criterio
+
+
         System.out.println("Deseja adicionar um segundo criterio ?\n" +
                 "0 - Não\n" +
                 "1 - Sim");
 
-
         int secondOption = scanner.nextInt();
         scanner.nextLine();
 
+        // Segundo Criterio
+
         int useSecond = 0;
-        String secondValue = "";
-
         if (secondOption == 1) {
-
-            System.out.println("Escolha o Segundo Criterio:" +
+            System.out.println("Escolha o Segundo Criterio:\n" +
                     "1- Nome ou sobrenome\n" +
                     "2- Sexo\n" +
                     "3- Idade\n" +
@@ -138,290 +168,33 @@ public class FilterPets {
         }
 
 
-        switch (useSecond) {
+        String firstValue = readCriterionValue(firstOption, scanner); // Entrada do primeiro criterio
+        String secondValue = "";
 
-            case 1:
-                System.out.println("Digite o nome:");
-                secondValue = scanner.nextLine();
-                break;
-            case 2:
-                System.out.println("Digite o sexo:");
-                secondValue = scanner.nextLine();
-                break;
-            case 3:
-                System.out.println("Digite a idade:");
-                secondValue = scanner.nextLine();
-                break;
-            case 4:
-                System.out.println("Digite o peso:");
-                secondValue = scanner.nextLine();
-                break;
-            case 5:
-                System.out.println("Digite a raça:");
-                secondValue = scanner.nextLine();
-                break;
-            case 6:
-                System.out.println("Digite o endereço:");
-                secondValue = scanner.nextLine();
-                break;
-            case 7:
-                System.out.println("Digite a data (Mẽs):");
-                String month = scanner.nextLine();
-                System.out.println("Digite a data (Ano):");
-                String year = scanner.nextLine();
-                secondValue = month + "/" + year;
-                break;
+        if (secondOption == 1) {
+            secondValue = readCriterionValue(useSecond, scanner); // Entrada do segundo criterio (opcional)
         }
 
-        switch (firstOption) {
+        for (int i = 0; i < qntPets; i++) {
 
-            case 1:
-                System.out.println("Digite o Nome ou Sobrenome do Pet:");
-                String findName = scanner.nextLine();
-                for (int i = 0; i < qntPets; i++) {
+            Pet pet = pets[i];
+            if (pet.getTipo() != tipoBusca) {
+                continue; // Caso o Tipo (Cachorro/Gato) seja diferente do tipoBusca, ele nem compara com o proximo criterio
+            }
 
-                    Pet pet = pets[i]; // Armazena o Pet da Posição [i] na variavel de referencia "pet"
+            if (!verifyCriterion(pet, firstOption, firstValue)) {
+                continue; // O pet não atende ao primeiro criterio informado
+            }
 
-                    if (pet.getTipo() != tipoBusca) {
-                        continue; // Compara o Pet Atual da posição [i] com o tipoBusca, se não baterem ele pula pro proximo Pet
-                    }
+            if (secondOption == 1 && !verifyCriterion(pet, useSecond, secondValue)) {
+                continue; // O pet não atende ao segundo criterio informado
+            }
 
-                    if (normalizeText(pet.getNomePet()).contains(normalizeText(findName))) { // Compara o Nome do Pet no sistema com o Nome que foi passado no findName
-                        if (secondOption == 0) { // Se Segundo Criterio não existe, mostre o Pet com 1 criterio
-                            System.out.print(counter + ". ");
-                            pet.displayPet(firstOption, findName);
-                            foundPet = true;
-                            counter++;
-                        } else {
-                            if (verifySecondCriterion(pet, useSecond, secondValue)) {
-                                System.out.print(counter + ". ");
-                                pet.displayPet(firstOption, findName);
-                                foundPet = true;
-                                counter++;
-                            }
-                        }
-                    }
-                }
-                FilterPets.showIfPetWasFound(foundPet);
-                break;
-
-            case 2:
-                System.out.println("Digite o Sexo do seu Pet (MACHO/FEMEA):");
-                Pet.SexoPet findSexo;
-
-                try {
-                    findSexo = Pet.SexoPet.valueOf(scanner.nextLine().trim().toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Sexo Invalido");
-                    break;
-                }
-
-                for (int i = 0; i < qntPets; i++) {
-                    Pet pet = pets[i];
-
-                    if (pet.getTipo() != tipoBusca) {
-                        continue;
-                    }
-
-                    if (pet.getSexo() == findSexo) {
-                        if (secondOption == 0) {
-                            System.out.print(counter + ". ");
-                            pet.displayPet();
-                            foundPet = true;
-                            counter++;
-                        } else {
-                            if (verifySecondCriterion(pet, useSecond, secondValue)) {
-                                System.out.print(counter + ". ");
-                                pet.displayPet();
-                                foundPet = true;
-                                counter++;
-                            }
-                        }
-                    }
-                }
-                FilterPets.showIfPetWasFound(foundPet);
-                break;
-
-            case 3:
-                System.out.println("Informe a Idade do seu Pet:");
-                double findAge = 0;
-
-                try {
-                    findAge = Double.parseDouble(scanner.nextLine().replace(",", "."));
-                } catch (NumberFormatException e) {
-                    System.out.println("Idade invalida");
-                    break;
-                }
-
-                for (int i = 0; i < qntPets; i++) {
-                    Pet pet = pets[i];
-
-                    if (pet.getTipo() != tipoBusca) {
-                        continue;
-                    }
-
-                    if (pet.getIdade() == findAge) {
-                        if (secondOption == 0) {
-                            System.out.print(counter + ". ");
-                            pet.displayPet();
-                            foundPet = true;
-                            counter++;
-                        } else {
-                            if (verifySecondCriterion(pet, useSecond, secondValue)) {
-                                System.out.print(counter + ". ");
-                                pet.displayPet();
-                                foundPet = true;
-                                counter++;
-                            }
-                        }
-                    }
-                }
-                FilterPets.showIfPetWasFound(foundPet);
-                break;
-
-            case 4:
-                System.out.println("Informe o Peso do seu Pet:");
-                double findWeight = 0;
-
-                try {
-                    findWeight = Double.parseDouble(scanner.nextLine().replace(",", "."));
-                } catch (NumberFormatException e) {
-                    System.out.println("Peso Invalido");
-                    break;
-                }
-
-                for (int i = 0; i < qntPets; i++) {
-                    Pet pet = pets[i];
-
-                    if (pet.getTipo() != tipoBusca) {
-                        continue;
-                    }
-
-                    if (pet.getPeso() == findWeight) {
-                        if (secondOption == 0) {
-                            System.out.print(counter + ". ");
-                            pet.displayPet();
-                            foundPet = true;
-                            counter++;
-                        } else {
-                            if (verifySecondCriterion(pet, useSecond, secondValue)) {
-                                System.out.print(counter + ". ");
-                                pet.displayPet();
-                                foundPet = true;
-                                counter++;
-                            }
-                        }
-                    }
-                }
-                FilterPets.showIfPetWasFound(foundPet);
-                break;
-
-            case 5:
-                System.out.println("Informe a raça do seu Pet:");
-
-                String findBreed = scanner.nextLine().trim();
-
-                for (int i = 0; i < qntPets; i++) {
-                    Pet pet = pets[i];
-
-                    if (pet.getTipo() != tipoBusca) {
-                        continue;
-                    }
-
-                    if (normalizeText(pet.getRaca()).contains(normalizeText(findBreed))) {
-                        if (secondOption == 0) {
-                            System.out.print(counter + ". ");
-                            pet.displayPet(firstOption, findBreed);
-                            foundPet = true;
-                            counter++;
-                        } else {
-                            if (verifySecondCriterion(pet, useSecond, secondValue)) {
-                                System.out.print(counter + ". ");
-                                pet.displayPet(firstOption, findBreed);
-                                foundPet = true;
-                                counter++;
-                            }
-                        }
-                    }
-                }
-                FilterPets.showIfPetWasFound(foundPet);
-                break;
-
-            case 6:
-                System.out.println("Informe o Numero, Rua e Cidade onde o Pet reside:");
-                String findAddress = scanner.nextLine().trim();
-
-
-                for (int i = 0; i < qntPets; i++) {
-                    Pet pet = pets[i];
-
-                    if (pet.getTipo() != tipoBusca) {
-                        continue;
-                    }
-
-                    String address = normalizeText(
-                            pet.getRuaEndereco() + " " +
-                                    pet.getNumeroEndereco() + " " +
-                                    pet.getCidadeEndereco()
-                    );
-
-                    if (address.contains(normalizeText(findAddress))) {
-                        if (secondOption == 0) {
-                            System.out.print(counter + ". ");
-                            pet.displayPet(firstOption, findAddress);
-                            foundPet = true;
-                            counter++;
-                        } else {
-                            if (verifySecondCriterion(pet, useSecond, secondValue)) {
-                                System.out.print(counter + ". ");
-                                pet.displayPet(firstOption, findAddress);
-                                foundPet = true;
-                                counter++;
-                            }
-                        }
-
-                    }
-                }
-                FilterPets.showIfPetWasFound(foundPet);
-                break;
-            case 7:
-                System.out.println("Digite o mês:");
-                int month = Integer.parseInt(scanner.nextLine());
-
-                System.out.println("Digite o ano:");
-                int year = Integer.parseInt(scanner.nextLine());
-
-                for (int i = 0; i < qntPets; i++) {
-                    Pet pet = pets[i];
-
-                    if(pet.getTipo() != tipoBusca){
-                        continue;
-                    }
-
-                    LocalDate date = pet.getRegisterDate();
-
-                    if(date.getMonthValue() == month && date.getYear() == year){
-                        if(secondOption == 0){
-                            System.out.print(counter + ". ");
-                            pet.displayPet();
-                            foundPet = true;
-                            counter++;
-                        } else {
-                            if (verifySecondCriterion(pet, useSecond, secondValue)) {
-                                System.out.print(counter + ". ");
-                                pet.displayPet();
-                                foundPet = true;
-                                counter++;
-                            }
-                        }
-                    }
-                }
-                FilterPets.showIfPetWasFound(foundPet);
-
-                break;
-            default:
-                System.out.println("Valor Invalido");
-                break;
+            System.out.print(counter + ". ");
+            pet.displayPet(firstOption, firstValue);
+            counter++;
+            foundPet = true;
         }
+        showIfPetWasFound(foundPet);
     }
 }

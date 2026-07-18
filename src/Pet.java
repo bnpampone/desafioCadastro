@@ -149,9 +149,6 @@ public class Pet {
 
     public void displayPet(int criterion, String findSearch){
         String name = nomePet;
-        String sex = sexo.toString();
-        String age = idade + " anos";
-        String weight = peso + "kg";
         String breed = raca;
         String address = ruaEndereco + ", " + numeroEndereco + " - " + cidadeEndereco;
         String date = registerDate.getMonthValue() + "/" + registerDate.getYear();
@@ -171,10 +168,10 @@ public class Pet {
         System.out.println(
                 name + " - " +
                         tipo + " - " +
-                        sex + " - " +
+                        sexo + " - " +
                         address + " - " +
-                        age + " anos - " +
-                        weight + "kg - " +
+                        idade + " anos - " +
+                        peso + "kg - " +
                         breed + " - " +
                         date
         );
@@ -182,6 +179,9 @@ public class Pet {
     }
 
     public static String highlight(String text, String search){
+        if(search.isBlank()){
+            return text;
+        }
         return text.replaceAll("(?i)" + Pattern.quote(search), BOLD + "$0" + RESET);
     }
 
