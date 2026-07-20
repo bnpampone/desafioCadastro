@@ -167,7 +167,8 @@ public class Pet {
                         cidadeEndereco + " - " +
                         idade + " anos - " +
                         peso + "kg - " +
-                        raca
+                        raca + " - " +
+                        registerDate.getMonthValue() + "/" + registerDate.getYear()
         );
     }
 
@@ -209,6 +210,22 @@ public class Pet {
         return text.replaceAll("(?i)" + Pattern.quote(search), BOLD + "$0" + RESET);
     }
 
+
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "nomePet='" + nomePet + '\'' +
+                ", sexo=" + sexo +
+                ", idade=" + idade +
+                ", peso=" + peso +
+                ", tipo=" + tipo +
+                ", raca='" + raca + '\'' +
+                ", ruaEndereco='" + ruaEndereco + '\'' +
+                ", numeroEndereco='" + numeroEndereco + '\'' +
+                ", cidadeEndereco='" + cidadeEndereco + '\'' +
+                ", registerDate=" + registerDate +
+                '}';
+    }
 
     public String getNomePet() {
         return nomePet;

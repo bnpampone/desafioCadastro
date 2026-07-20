@@ -224,4 +224,18 @@ public class FilterPets {
             e.printStackTrace();
         }
     }
+
+    public static void listAllPets(Pet[] pets, int qntPets){
+        if(qntPets == 0){
+            System.out.println("Nenhum Pet foi cadastrado!");
+            return;
+        }
+
+        for (int i = 0; i < qntPets; i++) {
+            Pet pet = pets[i];
+
+            System.out.print((i + 1) + ". ");
+            pets[i].displayPet();
+        }
+    }
 }

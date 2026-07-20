@@ -31,7 +31,7 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    System.out.println("1. Cadastrar um novo pet\n");
+                    System.out.println("1. Cadastrar um novo pet:\n");
                     Pet pet = new Pet(); // Criando um Objeto Pet "temporario" para preencher os dados
                     try{
                         pet.registerPet();
@@ -47,16 +47,17 @@ public class Main {
                     break;
 
                 case 2:
-                    System.out.println("2. Alterar os dados do pet cadastrado\n");
+                    System.out.println("2. Alterar os dados do pet cadastrado:\n");
                     FilterPets.findPet(pets,qntPets);
                     break;
 
                 case 3:
-                    System.out.println("3. Deletar um pet cadastrado\n");
+                    System.out.println("3. Deletar um pet cadastrado:\n");
                     break;
 
                 case 4:
-                    System.out.println("4. Listar todos os pets cadastrados\n");
+                    System.out.println("4. Listar todos os pets cadastrados:\n");
+                    FilterPets.listAllPets(pets, qntPets);
                     break;
 
                 case 5:
