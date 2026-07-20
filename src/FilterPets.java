@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class FilterPets {
     public static String normalizeText(String text) {
-        return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase();
+        return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase(); // Regex utilizada para remover Acentos de palavras e deixa-las unirfomizadas
     }
 
     public static void showIfPetWasFound(boolean foundPet) {
@@ -14,7 +14,6 @@ public class FilterPets {
     }
 
     public static boolean verifyCriterion(Pet pet, int criterion, String value) {
-
         switch (criterion) {
             case 1:
                 return normalizeText(pet.getNomePet()).contains(normalizeText(value));
@@ -65,11 +64,8 @@ public class FilterPets {
                     return false;
                 }
 
-
             default:
                 return false;
-
-
         }
     }
 
@@ -106,8 +102,8 @@ public class FilterPets {
 
     public static void findPet(Pet[] pets, int qntPets) {
         Scanner scanner = new Scanner(System.in);
-        boolean foundPet = false;
-        int counter = 1;
+        int counterPets = 0;
+        Pet[] listPets = new Pet[qntPets];
 
         System.out.println("Tipo:\n" +
                 "1- Cachorro\n" +
@@ -141,7 +137,6 @@ public class FilterPets {
 
         int firstOption = scanner.nextInt();
         scanner.nextLine();
-
 
 
         System.out.println("Deseja adicionar um segundo criterio ?\n" +
@@ -190,11 +185,43 @@ public class FilterPets {
                 continue; // O pet não atende ao segundo criterio informado
             }
 
-            System.out.print(counter + ". ");
+            listPets[counterPets] = pet; // Armazenando no array o Pet da posição atual no vetor
+            System.out.print((counterPets + 1) + ". ");
             pet.displayPet(firstOption, firstValue);
-            counter++;
-            foundPet = true;
+            counterPets++;
         }
-        showIfPetWasFound(foundPet);
+        if (counterPets == 0) {
+            showIfPetWasFound(false);
+            return;
+        }
+        int opcao;
+        while (true) { // While para que o usuario não consiga sair sem terminar a alteração
+            // Alteração de um pet cadastrado
+            System.out.println("Digite o Pet que você deseja alterar:");
+
+            if (!scanner.hasNextInt()) { // Se o valor de entrada for diferente de um inteiro, ele é ignorado
+                System.out.println("Digite apenas números!");
+                scanner.nextLine();
+                continue;
+            }
+
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            if (opcao < 1 || opcao > counterPets) { // Se a opção for -1 ou maior que o numero de PETS, ela é ignorada
+                System.out.println("Opção Inválida");
+                continue;
+            }
+            break;
+        }
+
+        Pet selectedPet = listPets[opcao - 1];
+
+        try {
+            selectedPet.editPet();
+            FormOperations.writeForm(selectedPet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

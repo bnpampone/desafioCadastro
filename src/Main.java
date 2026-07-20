@@ -1,10 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-import java.util.logging.Filter;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,8 +12,7 @@ public class Main {
                     "2. Alterar os dados do pet cadastrado\n" +
                     "3. Deletar um pet cadastrado\n" +
                     "4. Listar todos os pets cadastrados\n" +
-                    "5. Listar pets por algum critério (idade, nome, raça)\n" +
-                    "6. Sair");
+                    "5. Sair");
 
             // Proibe a entrada de 0 ou Negativos & a entrada de letras ou caracteres especiais
             String wrongInput = "Digite uma opção entre 1 e 6";
@@ -41,7 +34,7 @@ public class Main {
                     System.out.println("1. Cadastrar um novo pet\n");
                     Pet pet = new Pet(); // Criando um Objeto Pet "temporario" para preencher os dados
                     try{
-                        pet.cadastrarPet();
+                        pet.registerPet();
                         pets[qntPets] = pet; // Alocando o Objeto Pet no vetor de Pets
                         qntPets++;
 
@@ -67,10 +60,6 @@ public class Main {
                     break;
 
                 case 5:
-                    System.out.println("5. Listar pets por algum critério (idade, nome, raça)\n");
-                    break;
-
-                case 6:
                     System.out.println("Saindo...\n");
                     break;
 

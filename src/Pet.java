@@ -1,4 +1,3 @@
-import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -36,7 +35,7 @@ public class Pet {
         GATO,
     }
 
-    public void cadastrarPet() throws Exception {
+    public void registerPet() throws Exception {
         FormOperations.showForm();
         System.out.println("1 - Nome e Sobrenome do Pet");
         this.nomePet = scanner.nextLine();
@@ -79,7 +78,32 @@ public class Pet {
         System.out.println("6 - Peso do Pet");
         weightValidation();
 
-        System.out.println("7 - Raça do Pet\n");
+        System.out.println("7 - Raça do Pet");
+        this.raca = scanner.nextLine();
+        breedValidation();
+    }
+
+    public void editPet() throws Exception {
+        System.out.println("Editar nome: ");
+        this.nomePet = scanner.nextLine();
+        nameValidation();
+
+        System.out.println("Editar rua: ");
+        this.ruaEndereco = scanner.nextLine();
+
+        System.out.println("Editar numero da casa: ");
+        this.numeroEndereco = scanner.nextLine();
+
+        System.out.println("Editar cidade: ");
+        this.cidadeEndereco = scanner.nextLine();
+
+        System.out.println("Editar idade: ");
+        ageValidation();
+
+        System.out.println("Editar peso: ");
+        weightValidation();
+
+        System.out.println("Editar raça: ");
         this.raca = scanner.nextLine();
         breedValidation();
     }
