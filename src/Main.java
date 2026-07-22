@@ -95,6 +95,7 @@ public class Main {
                 }
             }
         } else {
+            int option = 0;
             while(option != 5){
                 System.out.println("1. Criar nova pergunta\n" +
                         "2. Alterar pergunta existente\n" +
