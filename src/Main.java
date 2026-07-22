@@ -5,14 +5,12 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Pet[] pets = new Pet[100];
         int qntPets = 0; // quantidade atual de Pets cadastrado
-        int option = 0;
+        int initMenu = 0;
 
         while (true) {
             System.out.println("1 - Iniciar o sistema para cadastro de PETS\n" +
                     "2 - Iniciar o sistema para alterar formulário");
 
-            option = scanner.nextInt();
-            scanner.nextLine();
 
             if (!scanner.hasNextInt()) {
                 System.out.println("Apenas números");
@@ -20,13 +18,17 @@ public class Main {
                 continue;
             }
 
-            if (option == 1 || option == 2) {
+            initMenu = scanner.nextInt();
+            scanner.nextLine();
+
+            if (initMenu == 1 || initMenu == 2) {
                 break;
             }
             System.out.println("Opção Inválida");
         }
 
-        if (option == 1) {
+        if (initMenu == 1) {
+            int option = 0;
             while (option != 5) { // Laço de repetição para exibição do MENU
                 System.out.println("1. Cadastrar um novo pet\n" +
                         "2. Alterar os dados do pet cadastrado\n" +
@@ -35,7 +37,7 @@ public class Main {
                         "5. Sair");
 
                 // Proibe a entrada de 0 ou Negativos & a entrada de letras ou caracteres especiais
-                String wrongInput = "Digite uma opção entre 1 e 6";
+                String wrongInput = "Digite uma opção entre 1 e 5";
                 if (scanner.hasNextInt()) {
                     option = scanner.nextInt();
                     scanner.nextLine();
@@ -44,7 +46,7 @@ public class Main {
                     scanner.next();
                 }
 
-                if (option <= 0 || option > 6) {
+                if (option < 0 || option > 5) {
                     System.out.println(wrongInput);
                     continue;
                 }
