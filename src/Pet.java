@@ -15,6 +15,7 @@ public class Pet {
     private String cidadeEndereco;
     private static final String NIF = "NÃO INFORMADO";
     private LocalDate registerDate;
+    private String reportPath;
 
     public static final String BOLD = "\033[1m";
     public static final String RESET = "\033[0m";
@@ -83,7 +84,7 @@ public class Pet {
         breedValidation();
     }
 
-    public void editPet() throws Exception {
+    public void editPetAtributtes() throws Exception {
         System.out.println("Editar nome: ");
         this.nomePet = scanner.nextLine();
         nameValidation();
@@ -211,20 +212,12 @@ public class Pet {
     }
 
 
-    @Override
-    public String toString() {
-        return "Pet{" +
-                "nomePet='" + nomePet + '\'' +
-                ", sexo=" + sexo +
-                ", idade=" + idade +
-                ", peso=" + peso +
-                ", tipo=" + tipo +
-                ", raca='" + raca + '\'' +
-                ", ruaEndereco='" + ruaEndereco + '\'' +
-                ", numeroEndereco='" + numeroEndereco + '\'' +
-                ", cidadeEndereco='" + cidadeEndereco + '\'' +
-                ", registerDate=" + registerDate +
-                '}';
+    public String getReportPath() {
+        return reportPath;
+    }
+
+    public void setReportPath(String reportPath) {
+        this.reportPath = reportPath;
     }
 
     public String getNomePet() {

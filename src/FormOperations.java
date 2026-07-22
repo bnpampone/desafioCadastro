@@ -16,30 +16,52 @@ public class FormOperations {
             e.printStackTrace(); // Em caso de algum erro no FilReader, ele lança a Exception no terminal
         }
     }
-    public static void writeForm(Pet pet){
+
+    public static void writeForm(Pet pet) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmm");
         String currentDate = LocalDateTime.now().format(dateTimeFormatter);
         String fileName = pet.getNomePet().trim().replace(" ", "").toUpperCase();
 
+        String path = "/home/brenopamponet/Área de trabalho/SistemaCadastroPets/" + currentDate + "-" + fileName + ".txt";
+        pet.setReportPath(path); // Path para que o File file New File() consiga referenciar qual Pet deletar
+
         // try with resources para fechar automaticamente, pois o BufferedWriter necessita fechar o recurso após o uso. Ele é um Closeable()
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter("/home/brenopamponet/Área de trabalho/SistemaCadastroPets/"+currentDate+"-"+fileName+".txt"))){
-            writer.write("1 - " +pet.getNomePet());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+            writer.write("1 - " + pet.getNomePet());
             writer.newLine();
-            writer.write("2 - " +pet.getTipo());
+            writer.write("2 - " + pet.getTipo());
             writer.newLine();
-            writer.write("3 - " +pet.getSexo());
+            writer.write("3 - " + pet.getSexo());
             writer.newLine();
-            writer.write("4 - " +pet.getRuaEndereco() + ", " + pet.getNumeroEndereco() + ", " +pet.getCidadeEndereco());
+            writer.write("4 - " + pet.getRuaEndereco() + ", " + pet.getNumeroEndereco() + ", " + pet.getCidadeEndereco());
             writer.newLine();
-            writer.write("5 - " +pet.getIdade());
+            writer.write("5 - " + pet.getIdade());
             writer.newLine();
-            writer.write("6 - " +pet.getPeso() + "kg");
+            writer.write("6 - " + pet.getPeso() + "kg");
             writer.newLine();
-            writer.write("7 - " +pet.getRaca());
+            writer.write("7 - " + pet.getRaca());
+            writer.newLine();
+            writer.write("8 - " + pet.getRegisterDate());
             writer.flush();
             System.out.println("Relatório do Pet Criado com Sucesso!!!");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public static void deleteForm(Pet pet) throws FileNotFoundException {
+        File file = new File(pet.getReportPath());
+
+        if (!file.exists()) {
+            throw new FileNotFoundException("Arquivo não encontrado.");
+        }
+
+        if (file.delete()) {
+            System.out.println("Arquivo deletado com Sucesso!");
+        } else {
+            throw new RuntimeException("Não foi possível deletar o arquivo.");
+        }
+
     }
 }

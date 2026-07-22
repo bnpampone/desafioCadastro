@@ -7,11 +7,11 @@ public class Main {
         int qntPets = 0; // quantidade atual de Pets cadastrado
         int option = 0;
 
-        while (option != 6) { // Laço de repetição para exibição do MENU
+        while (option != 5) { // Laço de repetição para exibição do MENU
             System.out.println("1. Cadastrar um novo pet\n" +
                     "2. Alterar os dados do pet cadastrado\n" +
-                    "3. Deletar um pet cadastrado\n" +
-                    "4. Listar todos os pets cadastrados\n" +
+                    "3. Listar todos os pets cadastrados\n" +
+                    "4. Deletar um pet cadastrado\n" +
                     "5. Sair");
 
             // Proibe a entrada de 0 ou Negativos & a entrada de letras ou caracteres especiais
@@ -31,7 +31,7 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    System.out.println("1. Cadastrar um novo pet:\n");
+                    System.out.println("1. Cadastrar um novo pet:");
                     Pet pet = new Pet(); // Criando um Objeto Pet "temporario" para preencher os dados
                     try{
                         pet.registerPet();
@@ -39,25 +39,28 @@ public class Main {
                         qntPets++;
 
                         FormOperations.writeForm(pet); // Metodo para gerar relatório com dados do Pet em um File.txt
-
-                        System.out.println("Pet criado com SUCESSO!");
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
+                    System.out.println();
                     break;
 
                 case 2:
-                    System.out.println("2. Alterar os dados do pet cadastrado:\n");
-                    FilterPets.findPet(pets,qntPets);
+                    System.out.println("2. Alterar os dados do pet cadastrado:");
+                    FilterPets.editPet(pets, qntPets);
+                    System.out.println();
                     break;
 
                 case 3:
-                    System.out.println("3. Deletar um pet cadastrado:\n");
+                    System.out.println("3. Listar todos os pets cadastrados:");
+                    FilterPets.listAllPets(pets, qntPets);
+                    System.out.println();
                     break;
 
                 case 4:
-                    System.out.println("4. Listar todos os pets cadastrados:\n");
-                    FilterPets.listAllPets(pets, qntPets);
+                    System.out.println("4. Deletar um pet cadastrado:");
+                    qntPets = FilterPets.deletePet(pets, qntPets);
+                    System.out.println();
                     break;
 
                 case 5:
@@ -65,6 +68,7 @@ public class Main {
                     break;
 
                 default:
+                    System.out.println("Opção Inválida");
                     break;
             }
         }
