@@ -1,6 +1,7 @@
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 public class FormOperations {
     public static void showForm() {
@@ -64,4 +65,60 @@ public class FormOperations {
         }
 
     }
+
+    public static void createQuestion() {
+        Scanner scanner = new Scanner(System.in);
+
+        String file = "desafioCadastro/formulario.txt";
+        
+        System.out.println("Digite a nova pergunta:");
+        String question = scanner.nextLine();
+
+        int numberOfQuestions = 0; // Define a quantidade de Perguntas no Array
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            while (reader.readLine() != null) { // Primeiro laço de repetição para descobrir o número de questões
+                numberOfQuestions++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String[] questions = new String[numberOfQuestions]; // Array de questions armazenando o número de perguntas
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String currentLine;
+            int i = 0;
+
+            while ((currentLine = reader.readLine()) != null) {
+                questions[i] = currentLine;
+                i++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        String[] array = new String[numberOfQuestions + 1];
+
+        for (int j = 0; j < numberOfQuestions; j++) {
+            array[j] = questions[j];
+        }
+
+        array[numberOfQuestions] = (numberOfQuestions + 1) + " - [EXTRA - PERGUNTA NOVA ADICIONADA] - " + question;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for(String line : array) {
+                writer.write(line);
+                writer.newLine();
+            }
+            writer.flush();
+            System.out.println("Pergunta adicionada com Sucesso!");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+    }
 }
+

@@ -115,7 +115,7 @@ public class Main {
                 switch (option){
                     case 1:
                         System.out.println("Criar nova pergunta:");
-
+                        FormOperations.createQuestion();
                         System.out.println();
                         break;
 
