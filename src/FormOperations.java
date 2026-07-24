@@ -43,6 +43,10 @@ public class FormOperations {
             writer.write("7 - " + pet.getRaca());
             writer.newLine();
             writer.write("8 - " + pet.getRegisterDate());
+            for (int i = 0; i < pet.getQntExtraQuestions(); i++) {
+                writer.newLine();
+                writer.write((8+i) + " - [EXTRA - PERGUNTA NOVA ADICIONADA] - " + pet.getExtraQuestions()[i]);
+            }
             writer.flush();
             System.out.println("Relatório do Pet Criado com Sucesso!!!");
         } catch (IOException e) {
@@ -105,7 +109,7 @@ public class FormOperations {
             array[j] = questions[j];
         }
 
-        array[numberOfQuestions] = (numberOfQuestions + 1) + " - [EXTRA - PERGUNTA NOVA ADICIONADA] - " + question;
+        array[numberOfQuestions] = (numberOfQuestions + 1) + " - [EXTRA - PERGUNTA NOVA ADICIONADA] - " + question + "?";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for(String line : array) {
                 writer.write(line);
