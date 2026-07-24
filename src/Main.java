@@ -121,7 +121,7 @@ public class Main {
 
                         case 2:
                         System.out.println("Alterar pergunta existente:");
-
+                        FormOperations.changeQuestion();
                         System.out.println();
                         break;
 
