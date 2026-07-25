@@ -111,14 +111,11 @@ public class FormOperations {
 
     }
 
-    public static void changeQuestion() {
-        Scanner scanner = new Scanner(System.in);
-
+    public static String[] readQuestions() {
         String file = "desafioCadastro/formulario.txt"; // Nome do arquivo que será lido
 
         int numberOfQuestions = 0; // Define a quantidade de Perguntas no Array
         String currentLine;
-
 
         // Try with resources para fechar o arquivo automaticamente pois ele é um Closeable()
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -128,13 +125,12 @@ public class FormOperations {
         } catch (IOException e) {
             e.printStackTrace(); // Em caso de algum erro no FilReader, ele lança a Exception no terminal
         }
-
-        String[] questions = new String[numberOfQuestions]; // Array de questions armazenando o número de perguntas
+        String[] questions = new String[numberOfQuestions]; // Array de questions é declarado com o tamanho de numberOfQuestions
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             int i = 0;
 
-            while ((currentLine = reader.readLine()) != null){
+            while ((currentLine = reader.readLine()) != null) {
                 questions[i] = currentLine;
                 i++;
             }
@@ -142,7 +138,27 @@ public class FormOperations {
             e.printStackTrace();
         }
 
-        if(questions.length <=7){
+        return questions;
+    }
+
+
+    public static void saveQuestions(String[] questions) {
+        String file = "desafioCadastro/formulario.txt"; // Nome do arquivo que será lido
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (String question : questions) {
+                writer.write(question);
+                writer.newLine();
+            }
+
+            System.out.println("Pergunta alterada com sucesso!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showExtraQuestions(String[] questions) {
+        if (questions.length <= 7) {
             System.out.println("Não existem perguntas extras para alterar.");
             return;
         }
@@ -150,6 +166,16 @@ public class FormOperations {
         for (int i = 7; i < questions.length; i++) {
             System.out.println(questions[i]); // Começa a printar A PARTIR da questão EXTRA, já que só elas podem ser alteradas
         }
+    }
+
+
+    public static void changeQuestion() {
+        Scanner scanner = new Scanner(System.in);
+
+        String[] questions = readQuestions(); // O Array local de questions recebe o Array de Questions já preenchido de readQuestions
+
+        showExtraQuestions(questions); // Exibe APENAS as questões extras
+
 
         System.out.print("Informe o numero da pergunta extra que você deseja alterar: ");
         int option = scanner.nextInt();
@@ -163,24 +189,27 @@ public class FormOperations {
         System.out.println("Nova pergunta: ");
         String newQuestion = scanner.nextLine();
 
-        if(newQuestion.isBlank()){
+        if (newQuestion.isBlank()) {
             System.out.println("A pergunta não pode ficar vazia.");
             return;
         }
 
         questions[option - 1] = option + " - [EXTRA - PERGUNTA NOVA ADICIONADA] - " + newQuestion + "?"; // Pergunta Extra que será escrita no formulario.txt
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            for (String question : questions) {
-                writer.write(question);
-                writer.newLine();
-            }
-
-            System.out.println("Pergunta alterada com sucesso!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        saveQuestions(questions);
+        System.out.println("Pergunta alterada com Sucesso!");
     }
+
+
+//    public static void deleteQuestion(String file, String[] questions, int option, String newQuestion) {
+//        Scanner scanner = new Scanner(System.in);
+//        FormOperations.manageQuestions();
+//
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+//            questions[option - 1] = // recebe a linha como txt vazio!
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
 
