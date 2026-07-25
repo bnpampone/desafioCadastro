@@ -39,18 +39,17 @@ public class Main {
                             "6. Sair");
 
                     // Proibe a entrada de 0 ou Negativos & a entrada de letras ou caracteres especiais
-                    String wrongInput = "Digite uma opção entre 1 e 6";
-                    if (scanner.hasNextInt()) {
-                        option = scanner.nextInt();
+                    if (!scanner.hasNextInt()) {
+                        System.out.println("Digite uma opção entre 1 e 6");
                         scanner.nextLine();
-                    } else {
-                        System.out.println(wrongInput);
-                        scanner.next();
                         continue;
                     }
 
-                    if (option < 0 || option > 6) {
-                        System.out.println(wrongInput);
+                    option = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (option < 1 || option > 6) {
+                        System.out.println("Digite uma opção entre 1 e 6");
                         continue;
                     }
 
@@ -121,6 +120,12 @@ public class Main {
 
                         option = scanner.nextInt();
                         scanner.nextLine();
+
+                        if (option < 1 || option > 6) {
+                            System.out.println("Digite uma opção entre 1 e 6");
+                            continue;
+                        }
+
 
                         switch (option) {
                             case 1:
