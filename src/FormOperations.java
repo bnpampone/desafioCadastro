@@ -150,22 +150,21 @@ public class FormOperations {
                 writer.write(question);
                 writer.newLine();
             }
-
-            System.out.println("Pergunta alterada com sucesso!");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void showExtraQuestions(String[] questions) {
+    public static boolean showExtraQuestions(String[] questions) {
         if (questions.length <= 7) {
             System.out.println("Não existem perguntas extras para alterar.");
-            return;
+            return false;
         }
 
         for (int i = 7; i < questions.length; i++) {
             System.out.println(questions[i]); // Começa a printar A PARTIR da questão EXTRA, já que só elas podem ser alteradas
         }
+        return true;
     }
 
 
@@ -174,10 +173,12 @@ public class FormOperations {
 
         String[] questions = readQuestions(); // O Array local de questions recebe o Array de Questions já preenchido de readQuestions
 
-        showExtraQuestions(questions); // Exibe APENAS as questões extras
+        if (!showExtraQuestions(questions)) { // Metodo exibe APENAS as questões extras
+            return;
+        }
 
 
-        System.out.print("Informe o numero da pergunta extra que você deseja alterar: ");
+        System.out.print("Informe o numero da pergunta extra que você deseja ALTERAR: ");
         int option = scanner.nextInt();
         scanner.nextLine();
 
@@ -197,19 +198,71 @@ public class FormOperations {
         questions[option - 1] = option + " - [EXTRA - PERGUNTA NOVA ADICIONADA] - " + newQuestion + "?"; // Pergunta Extra que será escrita no formulario.txt
 
         saveQuestions(questions);
-        System.out.println("Pergunta alterada com Sucesso!");
+        System.out.println("Pergunta ALTERADA com Sucesso!");
     }
 
 
-//    public static void deleteQuestion(String file, String[] questions, int option, String newQuestion) {
-//        Scanner scanner = new Scanner(System.in);
-//        FormOperations.manageQuestions();
-//
-//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-//            questions[option - 1] = // recebe a linha como txt vazio!
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-}
+    public static void deleteQuestion() {
+        Scanner scanner = new Scanner(System.in);
+
+        String[] questions = readQuestions();
+
+        if (!showExtraQuestions(questions)) { // Metodo exibe APENAS as questões extras
+            return;
+        }
+
+        System.out.print("Informe o numero da pergunta extra que você deseja DELETAR: ");
+        int option = scanner.nextInt();
+        scanner.nextLine();
+
+        if (option < 8 || option > questions.length) {
+            System.out.println("Questão Inválida");
+            return;
+        }
+
+        while (true) {
+            System.out.println("Você deseja continuar para deletar a pergunta número " + option + "? (SIM/NÃO)");
+            String ableDelete = FilterPets.normalizeText((scanner.nextLine()).trim());
+
+            if (ableDelete.equals("nao")) {
+                System.out.println("Operação cancelada.");
+                return;
+
+            } else if (ableDelete.equals("sim")) {
+                break; // Sai do laço do While e continua o processo de exclusão
+            }
+                System.out.println("Digite apenas SIM ou NÃO");
+
+        }
+
+
+                String[] newQuestions = new String[questions.length - 1];
+
+                int j = 0;
+
+                for (int i = 0; i < questions.length; i++) {
+                    if (i == option - 1) { // Pular a pergunta escolhida para remove-la
+                        continue;
+                    }
+
+                    newQuestions[j] = questions[i];
+                    j++;
+                }
+
+                for (int i = 7; i < newQuestions.length; i++) { // Reorganizando perguntas extras
+                    String question = newQuestions[i];
+
+                    int indice = question.indexOf(" - [EXTRA");
+
+                    if (indice != -1) {
+                        String text = question.substring(indice);
+                        newQuestions[i] = (i + 1) + text;
+                    }
+                }
+
+                saveQuestions(newQuestions);
+                System.out.println("Pergunta DELETADA com Sucesso!");
+                return;
+            }
+        }
 

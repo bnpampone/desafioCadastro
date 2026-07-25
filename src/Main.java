@@ -127,7 +127,7 @@ public class Main {
 
                         case 3:
                         System.out.println("Excluir pergunta existente:");
-
+                        FormOperations.deleteQuestion();
                         System.out.println();
                         break;
 
