@@ -216,11 +216,12 @@ public class Pet {
                         idade + " anos - " +
                         peso + "kg - " +
                         raca + " - " +
-                        registerDate.getMonthValue() + "/" + registerDate.getYear() + " - "
+                        registerDate.getMonthValue() + "/" + registerDate.getYear()
         );
         for (int i = 0; i < qntExtraQuestions; i++) {
-            System.out.println(extraQuestions[i]);
+            System.out.print(" - " + extraQuestions[i]);
         }
+        System.out.println();
     }
 
     public void displayPet(int criterion, String findSearch) {

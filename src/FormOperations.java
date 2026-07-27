@@ -1,4 +1,5 @@
 import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -10,7 +11,7 @@ public class FormOperations {
         String currentDate = LocalDateTime.now().format(dateTimeFormatter);
         String fileName = pet.getNomePet().trim().replace(" ", "").toUpperCase();
 
-        String path = "/home/brenopamponet/Área de trabalho/SistemaCadastroPets/" + currentDate + "-" + fileName + ".txt";
+        String path = "/home/brenopamponet/Área de trabalho/SistemaCadastroPets/Pets/" + currentDate + "-" + fileName + ".txt";
         pet.setReportPath(path); // Path para que o File file New File() consiga referenciar qual Pet deletar
 
         // try with resources para fechar automaticamente, pois o BufferedWriter necessita fechar o recurso após o uso. Ele é um Closeable()
@@ -231,38 +232,143 @@ public class FormOperations {
             } else if (ableDelete.equals("sim")) {
                 break; // Sai do laço do While e continua o processo de exclusão
             }
-                System.out.println("Digite apenas SIM ou NÃO");
+            System.out.println("Digite apenas SIM ou NÃO");
 
         }
 
 
-                String[] newQuestions = new String[questions.length - 1];
+        String[] newQuestions = new String[questions.length - 1];
 
-                int j = 0;
+        int j = 0;
 
-                for (int i = 0; i < questions.length; i++) {
-                    if (i == option - 1) { // Pular a pergunta escolhida para remove-la
-                        continue;
-                    }
+        for (int i = 0; i < questions.length; i++) {
+            if (i == option - 1) { // Pular a pergunta escolhida para remove-la
+                continue;
+            }
 
-                    newQuestions[j] = questions[i];
-                    j++;
-                }
+            newQuestions[j] = questions[i];
+            j++;
+        }
 
-                for (int i = 7; i < newQuestions.length; i++) { // Reorganizando perguntas extras
-                    String question = newQuestions[i];
+        for (int i = 7; i < newQuestions.length; i++) { // Reorganizando perguntas extras
+            String question = newQuestions[i];
 
-                    int indice = question.indexOf(" - [EXTRA");
+            int indice = question.indexOf(" - [EXTRA");
 
-                    if (indice != -1) {
-                        String text = question.substring(indice);
-                        newQuestions[i] = (i + 1) + text;
-                    }
-                }
-
-                saveQuestions(newQuestions);
-                System.out.println("Pergunta DELETADA com Sucesso!");
-                return;
+            if (indice != -1) {
+                String text = question.substring(indice);
+                newQuestions[i] = (i + 1) + text;
             }
         }
+
+        saveQuestions(newQuestions);
+        System.out.println("Pergunta DELETADA com Sucesso!");
+        return;
+    }
+
+    public static int loadPets(Pet[] pets) {
+        File folder = new File("/home/brenopamponet/Área de trabalho/SistemaCadastroPets/Pets");
+        File[] archives = folder.listFiles();
+
+        if (archives == null) {
+            return 0;
+        }
+
+        int qntPets = 0;
+
+        for (File archive : archives) {
+            if (!archive.isFile()) {
+                continue; // Se não for um arquivo, CONTINUE
+            }
+
+            if(!archive.getName().endsWith(".txt")){
+                continue; // Se o arquivo NÃO começar com .txt, CONTINUE
+            }
+
+            Pet pet = readPet(archive);
+
+            pets[qntPets] = pet;
+            qntPets++;
+        }
+
+        return qntPets;
+    }
+
+
+    public static Pet readPet(File file) {
+        Pet pet = new Pet();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+            String line;
+            int question = 1;
+            int extraIndex = 0;
+
+            while ((line = reader.readLine()) != null) {
+                String value = line.substring(line.indexOf("-") + 2).trim();
+
+                switch (question) {
+                    case 1:
+                        pet.setNomePet(value);
+                        break;
+
+                    case 2:
+                        pet.setTipo(Pet.TipoPET.valueOf(value));
+                        break;
+
+                    case 3:
+                        pet.setSexo(Pet.SexoPet.valueOf(value));
+                        break;
+
+                    case 4:
+                        String[] addres = value.split(",");
+
+                        pet.setRuaEndereco(addres[0].trim());
+                        pet.setNumeroEndereco(addres[1].trim());
+                        pet.setCidadeEndereco(addres[2].trim());
+                        break;
+
+                    case 5:
+                        pet.setIdade(Double.parseDouble(value));
+                        break;
+
+                    case 6:
+                        value = value.replace("kg", "");
+                        pet.setPeso(Double.parseDouble(value));
+                        break;
+
+                    case 7:
+                        pet.setRaca(value);
+                        break;
+
+                    case 8:
+                        pet.setRegisterDate(LocalDate.parse(value));
+                        break;
+
+                    default:
+                        int index = value.lastIndexOf("] - ");
+
+                        if (index != -1) {
+                            value = value.substring(index + 3);
+                        }
+
+                        String[] extras = pet.getExtraQuestions();
+                        extras[extraIndex] = value; // O array de string Extra, recebe a String value na posição extraIndex
+                        pet.setExtraQuestions(extras);
+
+                        extraIndex++;
+                        pet.setQntExtraQuestions(extraIndex);
+                        break;
+                }
+                question++;
+            }
+
+            pet.setReportPath(file.getAbsolutePath());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pet;
+    }
+}
 

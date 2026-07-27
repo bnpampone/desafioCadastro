@@ -5,5 +5,5 @@
 5 - Qual a idade aproximada do pet?
 6 - Qual o peso aproximado do pet?
 7 - Qual a raça do pet?
-8 - [EXTRA - PERGUNTA NOVA ADICIONADA] - Qual a pelagem do Pet?
+8 - [EXTRA - PERGUNTA NOVA ADICIONADA] - Qual a cor da pelagem do Pet?
 9 - [EXTRA - PERGUNTA NOVA ADICIONADA] - Pet tem antecedentes criminais?

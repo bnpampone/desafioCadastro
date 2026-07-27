@@ -4,9 +4,13 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Pet[] pets = new Pet[100];
-        int qntPets = 0; // quantidade atual de Pets cadastrado
+
+        // quantidade atual de Pets cadastrado
+        int qntPets = FormOperations.loadPets(pets);
+
         int initMenu = 0;
         boolean running = true;
+
         while (running) {
             while (true) {
                 System.out.println("1 - Iniciar o sistema para cadastro de PETS\n" +
@@ -104,61 +108,63 @@ public class Main {
                     }
                 }
             } else {
+
                 int option = 0;
-                    while (option != 5) {
-                        System.out.println("1. Criar nova pergunta\n" +
-                                "2. Alterar pergunta existente\n" +
-                                "3. Excluir pergunta existente\n" +
-                                "4. Voltar para o menu inicial\n" +
-                                "5. Sair");
+                while (option != 5) {
+                    System.out.println("1. Criar nova pergunta\n" +
+                            "2. Alterar pergunta existente\n" +
+                            "3. Excluir pergunta existente\n" +
+                            "4. Voltar para o menu inicial\n" +
+                            "5. Sair");
 
-                        if (!scanner.hasNextInt()) {
-                            System.out.println("Apenas números");
-                            scanner.nextLine();
-                            continue;
-                        }
-
-                        option = scanner.nextInt();
+                    if (!scanner.hasNextInt()) {
+                        System.out.println("Apenas números");
                         scanner.nextLine();
-
-                        if (option < 1 || option > 6) {
-                            System.out.println("Digite uma opção entre 1 e 6");
-                            continue;
-                        }
-
-
-                        switch (option) {
-                            case 1:
-                                System.out.println("Criar nova pergunta:");
-                                FormOperations.createQuestion();
-                                System.out.println();
-                                break;
-
-                            case 2:
-                                System.out.println("Alterar pergunta existente:");
-                                FormOperations.changeQuestion();
-                                System.out.println();
-                                break;
-
-                            case 3:
-                                System.out.println("Excluir pergunta existente:");
-                                FormOperations.deleteQuestion();
-                                System.out.println();
-                                break;
-
-                            case 4:
-                                System.out.println("Voltar para o menu inicial:");
-                                System.out.println();
-                                option = 5;
-                                break;
-
-                            case 5:
-                                System.out.println("Saindo...");
-                                running = false;
-                                break;
-                        }
+                        continue;
                     }
+
+                    option = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (option < 1 || option > 6) {
+                        System.out.println("Digite uma opção entre 1 e 6");
+                        continue;
+                    }
+
+
+                    switch (option) {
+                        case 1:
+                            System.out.println("Criar nova pergunta:");
+                            FormOperations.createQuestion();
+                            System.out.println();
+                            break;
+
+                        case 2:
+                            System.out.println("Alterar pergunta existente:");
+                            FormOperations.changeQuestion();
+                            System.out.println();
+                            break;
+
+                        case 3:
+                            System.out.println("Excluir pergunta existente:");
+                            FormOperations.deleteQuestion();
+                            System.out.println();
+                            break;
+
+                        case 4:
+                            System.out.println("Voltar para o menu inicial:");
+                            System.out.println();
+                            option = 5;
+                            break;
+
+                        case 5:
+                            System.out.println("Saindo...");
+                            running = false;
+                            break;
+                    }
+                }
             }
+
         }
     }
 }
